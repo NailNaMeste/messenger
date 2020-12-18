@@ -10,6 +10,7 @@ python-dotenv==0.15.0
 rfc3986==1.4.0
 sanic==20.9.1
 sniffio==1.2.0
+SQLAlchemy==1.3.21
 ujson==4.0.1
 uvloop==0.14.0
 websockets==8.1
