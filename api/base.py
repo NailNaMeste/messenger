@@ -32,7 +32,7 @@ class ResponseDto:
         #     if not prop.startswith('_') and not prop.endswith('_'):
         #         attr = getattr(obj, prop)
         #         if not callable(attr):
-        #             valid_data['prop'] = attr
+        #             valid_data[prop] = attr
         #
 
         properties = {
