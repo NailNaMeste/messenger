@@ -4,8 +4,13 @@ from sanic.response import BaseHTTPResponse
 from api.request import RequestCreateEmployeeDto
 from api.response import ResponseEmployeeDto
 from transport.sanic.endpoints import BaseEndpoint
+from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException, SanicEmployeeConflictException
 
 from db.queries import employee as employee_queries
+from db.exceptions import DBDataException, DBIntegrityException, DBEmployeeExistsException
+
+from helpers.password import generate_hash
+from helpers.password import GeneratePasswordHashException
 
 
 class CreateEmployeeEndpoint(BaseEndpoint):
@@ -14,8 +19,20 @@ class CreateEmployeeEndpoint(BaseEndpoint):
 
         request_model = RequestCreateEmployeeDto(body)
 
-        db_employee = employee_queries.create_employee(session, request_model)
-        session.commit_session()
+        try:
+            hashed_password = generate_hash(request_model.password)
+        except GeneratePasswordHashException as e:
+            raise SanicPasswordHashException(str(e))
+
+        try:
+            db_employee = employee_queries.create_employee(session, request_model, hashed_password)
+        except DBEmployeeExistsException:
+            raise SanicEmployeeConflictException('Login is busy')
+
+        try:
+            session.commit_session()
+        except (DBDataException, DBIntegrityException) as e:
+            raise SanicDBException(str(e))
 
         response_model = ResponseEmployeeDto(db_employee)
 
