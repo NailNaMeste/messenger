@@ -1,6 +1,7 @@
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
+from api.response.auth_employee import ResponseAuthEmployeeDto, AuthResponseObject
 from transport.sanic.endpoints import BaseEndpoint
 from transport.sanic.exceptions import SanicEmployeeNotFound, SanicPasswordHashException
 
@@ -34,11 +35,12 @@ class AuthEmployeeEndpoint(BaseEndpoint):
             'eid': db_employee.id,
         }
 
-        response_body = {
-            'Authorization': create_token(payload)
-        }
+        token = create_token(payload)
+        response = AuthResponseObject(token)
+
+        response_model = ResponseAuthEmployeeDto(response)
 
         return await self.make_response_json(
-            body=response_body,
+            body=response_model.dump(),
             status=200,
         )
