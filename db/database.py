@@ -39,7 +39,6 @@ class DBSession:
 
     def get_employee_all(self) -> List[DBEmployee]:
         qs = self.employees()
-        print(qs)
         return qs.all()
 
     def commit_session(self, need_close: bool = False):

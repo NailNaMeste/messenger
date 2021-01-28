@@ -24,7 +24,7 @@ def create_employee(session: DBSession, employee: RequestCreateEmployeeDto, hash
     return new_employee
 
 
-def get_employee(session: DBSession, *, login: str = None, employee_id: int = None) -> DBEmployee:
+def get_employee(session: DBSession, *, login: str = None, eid: int = None) -> DBEmployee:
     db_employee = None
 
     if login is not None:
@@ -41,8 +41,6 @@ def patch_employee(session: DBSession, employee: RequestPatchEmployeeDto, employ
 
     db_employee = session.get_employee_by_id(employee_id)
 
-    # attrs = ('first_name', 'last_name', 'position', 'department')
-    # for attr in attrs:
     for attr in employee.fields:
         if hasattr(employee, attr):
             value = getattr(employee, attr)
