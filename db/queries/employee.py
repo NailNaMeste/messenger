@@ -12,8 +12,6 @@ def create_employee(session: DBSession, employee: RequestCreateEmployeeDto, hash
         password=hashed_password,
         first_name=employee.first_name,
         last_name=employee.last_name,
-        position=employee.position,
-        department=employee.department,
     )
 
     if session.get_employee_by_login(new_employee.login) is not None:
@@ -24,13 +22,13 @@ def create_employee(session: DBSession, employee: RequestCreateEmployeeDto, hash
     return new_employee
 
 
-def get_employee(session: DBSession, *, login: str = None, eid: int = None) -> DBEmployee:
+def get_employee(session: DBSession, eid: int = None, login: str = None) -> DBEmployee:
     db_employee = None
 
     if login is not None:
         db_employee = session.get_employee_by_login(login)
-    elif employee_id is not None:
-        db_employee = session.get_employee_by_id(employee_id)
+    elif eid is not None:
+        db_employee = session.get_employee_by_id(eid)
 
     if db_employee is None:
         raise DBEmployeeNotExistsException

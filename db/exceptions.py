@@ -1,3 +1,6 @@
+from sanic.exceptions import SanicException
+
+
 class DBIntegrityException(Exception):
     pass
 
@@ -12,3 +15,15 @@ class DBEmployeeExistsException(Exception):
 
 class DBEmployeeNotExistsException(Exception):
     pass
+
+
+class DBMessageSelfSendingException(Exception):
+    pass
+
+
+class DBMessageNotExistException(Exception):
+    status_code = 404
+
+
+class DBMessageReadNotAllowedException(SanicException):
+    status_code = 400

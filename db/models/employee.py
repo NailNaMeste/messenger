@@ -1,4 +1,4 @@
-from sqlalchemy import Column, VARCHAR, VARBINARY, BOOLEAN
+from sqlalchemy import Column, VARCHAR, VARBINARY, BOOLEAN, INT
 
 from db.models import BaseModel
 
@@ -12,5 +12,13 @@ class DBEmployee(BaseModel):
     first_name = Column(VARCHAR(50))
     last_name = Column(VARCHAR(50))
     is_delete = Column(BOOLEAN(), nullable=False, default=False)
-    position = Column(VARCHAR(50))
-    department = Column(VARCHAR(50))
+
+
+class DBMessage(BaseModel):
+    __tablename__ = 'message'
+
+    user_message = Column(VARCHAR(200), nullable=False)
+    recipient = Column(VARCHAR(50), nullable=False)
+    sender_id = Column(INT, nullable=False)
+    recipient_id = Column(INT, nullable=False)
+    is_deleted = Column(BOOLEAN(), nullable=False, default=False)

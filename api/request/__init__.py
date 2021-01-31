@@ -1,4 +1,5 @@
 from .create_employee import RequestCreateEmployeeDto
 from .auth_employee import RequestAuthEmployeeDto
 from .patch_employee import RequestPatchEmployeeDto
-from .get_employee import RequestGetEmployeeDto
+from .create_message import RequestCreateMessageDto
+from .patch_message import RequestPatchMsgDto

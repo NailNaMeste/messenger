@@ -27,13 +27,6 @@ class ResponseDto:
     __schema__: Schema
 
     def __init__(self, obj, many: bool = False):
-        # properties = {}
-        # for prop in dir(obj):
-        #     if not prop.startswith('_') and not prop.endswith('_'):
-        #         attr = getattr(obj, prop)
-        #         if not callable(attr):
-        #             valid_data[prop] = attr
-        #
 
         if many:
             properties = [self.parse_obj(o) for o in obj]

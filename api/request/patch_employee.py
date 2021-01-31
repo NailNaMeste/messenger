@@ -6,8 +6,6 @@ from api.base import RequestDto
 class RequestPatchEmployeeDtoSchema(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
-    position = fields.Str()
-    department = fields.Str()
 
 
 class RequestPatchEmployeeDto(RequestDto, RequestPatchEmployeeDtoSchema):

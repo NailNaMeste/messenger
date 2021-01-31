@@ -1,7 +1,7 @@
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
-from api.request import RequestPatchEmployeeDto, RequestGetEmployeeDto
+from api.request import RequestPatchEmployeeDto
 from api.response import ResponseEmployeeDto
 from db.database import DBSession
 from db.exceptions import DBEmployeeNotExistsException, DBDataException, DBIntegrityException
@@ -52,13 +52,12 @@ class EmployeeEndpoint(BaseEndpoint):
         return await self.make_response_json(status=204)
 
     async def method_get(
-            self, request: Request, body: dict, session: DBSession,eid: int, token: dict, *args, **kwargs
+            self, request: Request, body: dict, session: DBSession, eid: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
-        request_model = RequestGetEmployeeDto(body)
+
         if token.get('eid') != eid:
             return await self.make_response_json(status=403)
-
-        db_employee = employee_queries.get_employee(session)
+        db_employee = employee_queries.get_employee(session, eid)
         response_model = ResponseEmployeeDto(db_employee)
 
         return await self.make_response_json(body=response_model.dump())

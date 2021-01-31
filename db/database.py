@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker, Session, Query
 
 from db.exceptions import DBIntegrityException, DBDataException
-from db.models import BaseModel, DBEmployee
+from db.models import BaseModel, DBEmployee, DBMessage
 
 
 class DBSession:
@@ -19,6 +19,9 @@ class DBSession:
 
     def employees(self) -> Query:
         return self.query(DBEmployee).filter(DBEmployee.is_delete == 0)
+
+    def messages(self) -> Query:
+        return self.query(DBMessage)
 
     def close_session(self):
         self._session.close()
@@ -37,9 +40,28 @@ class DBSession:
     def get_employee_by_id(self, eid: int) -> DBEmployee:
         return self.employees().filter(DBEmployee.id == eid).first()
 
+    def get_recipient_id_by_login(self, recipient: str) -> DBMessage:
+        return self.get_employee_by_login(recipient).id
+
+    def get_message_by_sender(self, eid: int) -> DBMessage:
+        return self.messages().filter(DBMessage.sender_id == eid)
+
+    def get_all_messages_by_sender(self, eid: int) -> List[DBMessage]:
+        return self.messages().filter(DBMessage.sender_id == eid).all()
+
+    def get_message_by_recipient(self, message_id: int):
+        return self.get_message_by_id(message_id).recipient_id
+
+    def get_message_by_id(self, message_id: int) -> DBMessage:
+        return self.messages().filter(DBMessage.id == message_id).first()
+
     def get_employee_all(self) -> List[DBEmployee]:
         qs = self.employees()
         return qs.all()
+
+   # def get_msg(self, eid) -> List[DBMessage]:
+      #  if self.get_sender_id(eid) == eid:
+
 
     def commit_session(self, need_close: bool = False):
         try:

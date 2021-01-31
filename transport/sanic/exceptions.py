@@ -14,7 +14,7 @@ class SanicResponseValidationException(SanicException):
 
 
 class SanicPasswordHashException(SanicException):
-    status_code = 500
+    status_code = 400
 
 
 class SanicDBException(SanicException):
@@ -27,3 +27,7 @@ class SanicAuthException(SanicException):
 
 class SanicEmployeeNotFound(SanicException):
     status_code = 404
+
+
+class SanicMessageForbidden(SanicException):
+    status_code = 403
