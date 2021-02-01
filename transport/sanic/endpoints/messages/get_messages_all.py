@@ -8,7 +8,7 @@ from db.queries import message as message_queries
 from transport.sanic.endpoints import BaseEndpoint
 
 
-class AllMsgEndpoint(BaseEndpoint):
+class SendedMsgEndpoint(BaseEndpoint):
 
     async def method_get(
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs

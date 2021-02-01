@@ -4,11 +4,11 @@ from sanic.response import BaseHTTPResponse
 from api.request import RequestPatchMsgDto
 from api.response import ResponseMessageDto
 from db.database import DBSession
-from db.exceptions import  DBDataException, DBIntegrityException,\
-    DBMessageReadNotAllowedException, DBMessageNotExistException
+from db.exceptions import DBDataException, DBIntegrityException,\
+     DBMessageNotExistException
 from db.queries import message as message_queries
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicDBException, SanicMessageForbidden
+from transport.sanic.exceptions import SanicDBException, SanicMessageForbidden, SanicMessageReadNotAllowedException
 
 
 class MessageEndpoint(BaseEndpoint):
@@ -20,7 +20,7 @@ class MessageEndpoint(BaseEndpoint):
         try:
             sender_id = session.get_message_by_id(message_id).sender_id
             if eid != sender_id:
-                raise SanicMessageForbidden("U cant patch this massage")
+                raise SanicMessageForbidden("Forbidden")
         except AttributeError:
             raise DBMessageNotExistException("Message not found")
         request_model = RequestPatchMsgDto(body)
@@ -41,8 +41,16 @@ class MessageEndpoint(BaseEndpoint):
 
 
     async def method_delete(
-            self, request: Request, body: dict, session: DBSession, message_id: int, *args, **kwargs
+            self, request: Request, body: dict, session: DBSession, message_id: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
+        eid = token.get('eid')
+        try:
+            recipient_id = session.get_recipient_id_by_message(message_id)
+            sender_id = session.get_message_by_id(message_id).sender_id
+            if eid != sender_id and eid != recipient_id:
+                raise SanicMessageForbidden("")
+        except AttributeError:
+            raise DBMessageNotExistException("Message not found")
         try:
             message = message_queries.delete_massage(session, message_id)
         except AttributeError:
@@ -62,7 +70,7 @@ class MessageEndpoint(BaseEndpoint):
         eid = token.get('eid')
 
         try:
-            recipient_id = session.get_message_by_recipient(message_id)
+            recipient_id = session.get_recipient_id_by_message(message_id)
         except AttributeError:
             raise DBMessageNotExistException("Message not found")
 
@@ -70,8 +78,8 @@ class MessageEndpoint(BaseEndpoint):
             raise SanicMessageForbidden("Not allowed")
         try:
             db_message = message_queries.get_message(session, message_id)
-        except DBMessageReadNotAllowedException:
-            raise
+        except SanicMessageReadNotAllowedException as e:
+            raise e
         response_model = ResponseMessageDto(db_message)
 
         return await self.make_response_json(body=response_model.dump())

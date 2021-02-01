@@ -1,17 +1,13 @@
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
-from api.request import RequestCreateEmployeeDto
 from api.request.create_message import RequestCreateMessageDto
 from api.response import ResponseMessageDto
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException, SanicEmployeeConflictException
+from transport.sanic.exceptions import SanicDBException
 from db.queries import message as message_queries
-from db.queries import employee as employee_queries
-from db.exceptions import DBDataException, DBIntegrityException, DBEmployeeExistsException
 
-from helpers.password import generate_hash
-from helpers.password import GeneratePasswordHashException
+from db.exceptions import DBDataException, DBIntegrityException
 
 
 class CreateMessageEndpoint(BaseEndpoint):

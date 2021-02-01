@@ -17,13 +17,12 @@ class DBEmployeeNotExistsException(Exception):
     pass
 
 
-class DBMessageSelfSendingException(Exception):
+class DBMessageSelfSendingException(SanicException):
     pass
 
 
-class DBMessageNotExistException(Exception):
+class DBMessageNotExistException(SanicException):
     status_code = 404
 
 
-class DBMessageReadNotAllowedException(SanicException):
-    status_code = 400
+

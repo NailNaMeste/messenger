@@ -22,7 +22,7 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.CreateMessageEndpoint(
             config, context, uri='/msg', methods=['POST'], auth_required=True,
         ),
-        endpoints.AllMsgEndpoint(
+        endpoints.SendedMsgEndpoint(
             config, context, uri='/msg', methods=['GET'], auth_required=True,
         ),
         endpoints.MessageEndpoint(

@@ -31,3 +31,11 @@ class SanicEmployeeNotFound(SanicException):
 
 class SanicMessageForbidden(SanicException):
     status_code = 403
+
+
+class SanicMessageSelfSendingException(SanicException):
+    status_code = 400
+
+
+class SanicMessageReadNotAllowedException(SanicException):
+    status_code = 403

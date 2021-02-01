@@ -10,9 +10,9 @@ class SQLiteConfig:
 
 
 class PostgresConfig:
-    db = os.getenv('POSTGRES_DB', 'tasks')
-    user = os.getenv('POSTGRES_USER', 'admin')
-    password = os.getenv('POSTGRES_PASSWORD', 'qwerty')
-    host = os.getenv('POSTGRES_HOST', 'tasks-db')
+    name = os.getenv('POSTGRES_DB', 'tasks-db')
+    user = os.getenv('POSTGRES_USER', 'postgres')
+    password = os.getenv('POSTGRES_PASSWORD', '1')
+    host = os.getenv('POSTGRES_HOST', 'localhost')
     port = os.getenv('POSTGRES_PORT', '5432')
-    url = rf'postgres+psycopg2://{user}:{password}@{host}:{port}/{db}'
+    url = rf'postgres://{user}:{password}@{host}:{port}/{name}'

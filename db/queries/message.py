@@ -6,6 +6,7 @@ from api.request.create_message import RequestCreateMessageDto
 from db.database import DBSession
 from db.exceptions import DBEmployeeNotExistsException, DBMessageSelfSendingException
 from db.models.employee import DBMessage
+from transport.sanic.exceptions import SanicMessageSelfSendingException
 
 
 def create_message(session: DBSession, message: RequestCreateMessageDto, eid: int) -> DBMessage:
@@ -20,7 +21,7 @@ def create_message(session: DBSession, message: RequestCreateMessageDto, eid: in
     if session.get_employee_by_login(new_message.recipient) is None:
         raise DBEmployeeNotExistsException
     if new_message.sender_id == new_message.recipient_id:
-        raise DBMessageSelfSendingException
+        raise SanicMessageSelfSendingException("Cant send massage yourself")
     session.add_model(new_message)
 
     return new_message

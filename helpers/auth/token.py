@@ -2,19 +2,15 @@ import datetime
 
 import jwt
 
-
 from helpers.auth.exceptions import ReadTokenException
 
 
 secret = 'SUPER_SECRET_KEY'
 
 
-
-
-
 def create_token(data: dict, *, lifetime: int = 1) -> str:
     payload = {
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=lifetime),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=lifetime),
     }
     payload.update(data)
     return jwt.encode(payload, secret, algorithm='HS256')

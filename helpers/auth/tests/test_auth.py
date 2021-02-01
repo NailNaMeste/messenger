@@ -39,7 +39,7 @@ def test_read_invalid_token():
         read_token(token)
 
 
-def test_read_expired_token(token_data, patch_datetime_utcnow):
+def test_read_expired_token(token_data):
 
     request_token = create_token(token_data)
     with pytest.raises(ReadTokenException):
