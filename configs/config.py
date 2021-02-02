@@ -1,5 +1,5 @@
 from transport.sanic.config import SanicConfig
-from db.config import SQLiteConfig, PostgresConfig
+from db.config import PostgresConfig
 
 
 class ApplicationConfig:
@@ -8,5 +8,4 @@ class ApplicationConfig:
 
     def __init__(self):
         self.sanic = SanicConfig()
-        #self.database = SQLiteConfig()
         self.database = PostgresConfig()

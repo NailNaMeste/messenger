@@ -4,8 +4,8 @@ from sanic.response import BaseHTTPResponse
 from api.request import RequestPatchMsgDto
 from api.response import ResponseMessageDto
 from db.database import DBSession
-from db.exceptions import DBDataException, DBIntegrityException,\
-     DBMessageNotExistException
+from db.exceptions import DBDataException, DBIntegrityException, \
+    DBMessageNotExistException
 from db.queries import message as message_queries
 from transport.sanic.endpoints import BaseEndpoint
 from transport.sanic.exceptions import SanicDBException, SanicMessageForbidden, SanicMessageReadNotAllowedException
@@ -17,6 +17,7 @@ class MessageEndpoint(BaseEndpoint):
             self, request: Request, body: dict, session: DBSession, message_id: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
         eid = token.get('eid')
+        # проверка доступа к патчу отправленного сообщения через sender_id
         try:
             sender_id = session.get_message_by_id(message_id).sender_id
             if eid != sender_id:
@@ -39,7 +40,6 @@ class MessageEndpoint(BaseEndpoint):
 
         return await self.make_response_json(status=200, body=response_model.dump())
 
-
     async def method_delete(
             self, request: Request, body: dict, session: DBSession, message_id: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
@@ -47,8 +47,9 @@ class MessageEndpoint(BaseEndpoint):
         try:
             recipient_id = session.get_recipient_id_by_message(message_id)
             sender_id = session.get_message_by_id(message_id).sender_id
+            # проверка доступа к удалению отправленного или полученного сообщения через sender_id или recipient_id
             if eid != sender_id and eid != recipient_id:
-                raise SanicMessageForbidden("")
+                raise SanicMessageForbidden("Forbidden")
         except AttributeError:
             raise DBMessageNotExistException("Message not found")
         try:
@@ -62,7 +63,6 @@ class MessageEndpoint(BaseEndpoint):
             raise SanicDBException(str(e))
 
         return await self.make_response_json(status=204)
-
 
     async def method_get(
             self, request: Request, body: dict, session: DBSession, message_id, token: dict, *args, **kwargs

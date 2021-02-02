@@ -6,7 +6,6 @@ from api.request.create_message import RequestCreateMessageDto
 from db.database import DBSession
 from db.exceptions import DBEmployeeNotExistsException
 from db.models.employee import DBMessage
-from transport.sanic.exceptions import SanicMessageSelfSendingException
 
 
 def create_message(session: DBSession, message: RequestCreateMessageDto, eid: int) -> DBMessage:

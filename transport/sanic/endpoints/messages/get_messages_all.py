@@ -13,6 +13,7 @@ class SendedMsgEndpoint(BaseEndpoint):
     async def method_get(
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
+        """#выводит все отправленные сообщения"""
         eid = token.get('eid')
 
         db_message = message_queries.get_messages_all(session, eid)
